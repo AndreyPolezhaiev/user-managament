@@ -18,17 +18,18 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private static final Long ID = 1L;
+
     private final UserMapper userMapper;
     private final UserInMemoryRepository userRepository;
 
     @Value("$PASS_AGE")
     private final int passAge;
-    private static final Long ID = 1L;
 
     @Override
     public UserResponseDto createUser(CreateUserRequestDto requestDto) {
         if (requestDto.getBirthDate().isAfter(LocalDateTime.now())
-            || requestDto.getBirthDate().isEqual(LocalDateTime.now())) {
+                || requestDto.getBirthDate().isEqual(LocalDateTime.now())) {
             throw new UserInValidBirthDateException("Birthdate can't be current or future");
         }
 
@@ -41,7 +42,10 @@ public class UserServiceImpl implements UserService {
             user.setId(ID);
 
         } else {
-            Long userId = userRepository.findAll().getLast().getId() + 1;
+            Long userId = userRepository.findAll().stream()
+                    .mapToLong(User::getId)
+                    .max()
+                    .orElse(0L) + 1;
             user.setId(userId);
         }
 
@@ -86,7 +90,6 @@ public class UserServiceImpl implements UserService {
                 .map(userMapper::toDto)
                 .toList();
     }
-
 
     private boolean checkAge(LocalDateTime userBirthDate) {
         LocalDateTime currentDate = LocalDateTime.now();

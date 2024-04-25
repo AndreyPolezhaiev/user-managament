@@ -15,7 +15,7 @@ public class UserInMemoryRepositoryImpl implements UserInMemoryRepository {
     @Override
     public User save(User user) {
         users.add(user);
-        return users.getLast();
+        return users.get(users.size() - 1);
     }
 
     @Override
