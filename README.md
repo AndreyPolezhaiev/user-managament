@@ -1,0 +1,1 @@
+This app allows to manage users' data.
