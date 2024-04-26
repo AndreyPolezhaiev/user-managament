@@ -1,6 +1,6 @@
 package com.polezhaiev.usermanagement.repository.user.impl;
 
-import com.polezhaiev.usermanagement.exception.EntityNotFoundException;
+import com.polezhaiev.usermanagement.exception.app.EntityNotFoundException;
 import com.polezhaiev.usermanagement.model.User;
 import com.polezhaiev.usermanagement.repository.user.UserInMemoryRepository;
 import java.util.ArrayList;
