@@ -36,7 +36,7 @@ public class UserInMemoryRepositoryImpl implements UserInMemoryRepository {
         User user = users.stream()
                 .filter(u -> Objects.equals(u.getId(), id))
                 .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("Can't find user by id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("There is no user by id: " + id));
 
         return users.remove(user);
     }

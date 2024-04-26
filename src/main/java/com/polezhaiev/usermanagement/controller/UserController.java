@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "User management", description = "Endpoints for users managing")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/users")
+@RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
 
@@ -38,7 +38,7 @@ public class UserController {
     @PutMapping("/phone/{id}")
     public UserResponseDto updatePhoneNumber(
             @PathVariable Long id,
-            @RequestBody @Valid UpdateUserRequestDto requestDto) {
+            @RequestBody UpdateUserRequestDto requestDto) {
         return userService.updatePhoneNumber(id, requestDto);
     }
 
