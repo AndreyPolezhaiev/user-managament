@@ -23,8 +23,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final UserInMemoryRepository userRepository;
 
-    @Value("$PASS_AGE")
-    private final int passAge;
+    @Value("${pass.age}")
+    private int passAge;
 
     @Override
     public UserResponseDto createUser(CreateUserRequestDto requestDto) {
