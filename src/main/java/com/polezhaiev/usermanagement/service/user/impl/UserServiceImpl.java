@@ -28,14 +28,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto createUser(CreateUserRequestDto requestDto) {
-        if (requestDto.getBirthDate().isAfter(LocalDateTime.now())
-                || requestDto.getBirthDate().isEqual(LocalDateTime.now())) {
-            throw new UserInValidBirthDateException("Birthdate can't be current or future");
-        }
-
-        if (!checkAge(requestDto.getBirthDate())) {
-            throw new UserRegistrationException("Can't register user because the age less than 18");
-        }
+        checkBirthDate(requestDto.getBirthDate());
 
         User user = userMapper.toModel(requestDto);
         if (userRepository.findAll().isEmpty()) {
@@ -65,6 +58,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto updateUser(Long id, UpdateUserRequestDto requestDto) {
+        checkBirthDate(requestDto.getBirthDate());
+
         User user = userRepository.findById(id);
         user.setPhoneNumber(requestDto.getPhoneNumber());
         user.setEmail(requestDto.getEmail());
@@ -91,17 +86,27 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
-    private boolean checkAge(LocalDateTime userBirthDate) {
+    private void checkBirthDate(LocalDateTime userBirthDate) {
         LocalDateTime currentDate = LocalDateTime.now();
+        if (userBirthDate.isAfter(currentDate)
+                || userBirthDate.isEqual(currentDate)) {
+            throw new UserInValidBirthDateException(
+                    "Birthdate can't be current or future");
+        }
 
         if (currentDate.getYear() - userBirthDate.getYear() < passAge) {
-            return false;
-        }
+            throw new UserRegistrationException(
+                    "Can't register user because the age less than 18");
 
-        if (userBirthDate.getMonthValue() < currentDate.getMonthValue()) {
-            return false;
-        }
+        } else if (currentDate.getYear() - userBirthDate.getYear() == passAge) {
+            if (userBirthDate.getMonthValue() > currentDate.getMonthValue()) {
+                throw new UserRegistrationException(
+                        "Can't register user because the age less than 18");
 
-        return userBirthDate.getDayOfMonth() >= currentDate.getDayOfMonth();
+            } else if (userBirthDate.getDayOfMonth() > currentDate.getDayOfMonth()) {
+                throw new UserRegistrationException(
+                        "Can't register user because the age less than 18");
+            }
+        }
     }
 }
