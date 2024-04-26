@@ -1,4 +1,4 @@
-package com.polezhaiev.usermanagement.exception;
+package com.polezhaiev.usermanagement.exception.app;
 
 public class EntityNotFoundException extends RuntimeException {
     public EntityNotFoundException(String message) {
